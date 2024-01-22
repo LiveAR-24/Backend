@@ -62,7 +62,7 @@ public class TokenProvider {
                 .refreshToken(generateRefreshToken(user, new Date(now + REFRESH_TOKEN_EXPIRE_TIME_MILLIS)))
                 .refreshTokenExpiresIn((now + REFRESH_TOKEN_EXPIRE_TIME_MILLIS) / 1000)
                 .userId(user.getUserId())
-                .nickname(user.getNickName())
+                .nickname(user.getNickname())
                 .userRole(user.getUserRole().getDescription())
                 .build();
     }
