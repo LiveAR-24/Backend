@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
 @Entity
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +15,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userId;
 
+    @Column(nullable = false)
     String nickname;
 
     String email;
