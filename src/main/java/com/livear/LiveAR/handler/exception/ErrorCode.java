@@ -11,6 +11,7 @@ import lombok.Getter;
 public enum ErrorCode {
     //400 BAD_REQUEST 잘못된 요청
     BAD_REQUEST(400, "잘못된 요청입니다."),
+    FAILED_VALIDATION(40033, "입력하지 않은 부분이 있거나, 부적절한 입력 값이 있습니다."),
 
     // 401 UNAUTHORIZED 권한없음(인증 실패)
     UNAUTHORIZED(401, "권한 인증에 실패했습니다."),

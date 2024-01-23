@@ -3,12 +3,12 @@ package com.livear.LiveAR.dto.user;
 import com.livear.LiveAR.domain.User;
 import com.livear.LiveAR.domain.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @UtilityClass
 public class UserReq {
@@ -19,18 +19,18 @@ public class UserReq {
     public static class Signup {
 
         @NotNull
-        @Schema(description = "유저 닉네임")
+        @Schema(required = true,description = "유저 닉네임")
         String nickname;
 
         @NotNull
-        @Schema(description = "유저 기기 번호")
+        @Schema(required = true, description = "유저 기기 번호")
         String password;
 
-        public User toEntity(){
+        public User toEntity(String encPassword){
             return User.builder()
                     .nickname(nickname)
                     .userRole(UserRole.ROLE_USER)
-                    .password(password)
+                    .password(encPassword)
                     .build();
         }
     }
@@ -45,10 +45,8 @@ public class UserReq {
         @Schema(required = true, description = "유저 닉네임")
         String nickname;
 
+        @NotNull
         @Schema(required = true, description = "기기 번호)")
         String password;
     }
-
-
-
 }
