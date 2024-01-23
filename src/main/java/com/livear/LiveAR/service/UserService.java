@@ -53,7 +53,7 @@ public class UserService {
     public TokenResponseDto login(UserReq.Login userLogin) {
         TokenResponseDto tokenResponseDto = null;
         if (isDuplicateNickname(userLogin.getNickname())) {
-            User user = userRepository.findByNickName(userLogin.getNickname());
+            User user = userRepository.findByNickname(userLogin.getNickname());
 
             if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
                 throw new CustomBadRequestException(ErrorCode.INVALID_PASSWORD);
