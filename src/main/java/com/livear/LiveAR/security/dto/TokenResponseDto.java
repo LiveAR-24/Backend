@@ -24,5 +24,4 @@ public class TokenResponseDto {
     final String nickname;
 
     final String userRole;
-
 }
