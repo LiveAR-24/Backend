@@ -55,6 +55,10 @@ public class TokenProvider {
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
     public TokenResponseDto generateTokenResponse(User user) {
         long now = new Date().getTime();
+        String userinfo = user.getNickname();
+        if (userinfo == null) {
+            userinfo = user.getEmail(); //카카오로그인이라면 닉네임 대신 이메일 사용
+        }
         return TokenResponseDto.builder()
                 .tokenType(TOKEN_TYPE)
                 .accessToken(generateToken(user))
@@ -62,7 +66,7 @@ public class TokenProvider {
                 .refreshToken(generateRefreshToken(user, new Date(now + REFRESH_TOKEN_EXPIRE_TIME_MILLIS)))
                 .refreshTokenExpiresIn((now + REFRESH_TOKEN_EXPIRE_TIME_MILLIS) / 1000)
                 .userId(user.getUserId())
-                .nickname(user.getNickname())
+                .nickname(userinfo)
                 .userRole(user.getUserRole().getDescription())
                 .build();
     }

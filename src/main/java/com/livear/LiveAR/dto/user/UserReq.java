@@ -5,6 +5,7 @@ import com.livear.LiveAR.domain.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -48,5 +49,28 @@ public class UserReq {
         @NotNull
         @Schema(required = true, description = "기기 번호)")
         String password;
+    }
+
+    @Getter
+    @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    @Schema(title = "소셜 로그인 요청 객체")
+    public static class SocialLogin {
+
+        @NotNull
+        @Schema(required = true, description = "유저 닉네임")
+        String email;
+
+        @NotNull
+        @Schema(required = true, description = "기기 번호)")
+        String password;
+
+        public User toEntity(){
+            return User.builder()
+                    .email(email)
+                    .userRole(UserRole.ROLE_USER)
+                    .password(password)
+                    .build();
+        }
     }
 }
