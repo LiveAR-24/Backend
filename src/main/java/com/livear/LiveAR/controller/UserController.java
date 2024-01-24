@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
+    private final UserService userService;
 
     /**
      * NAME: 회원가입
      */
-    private final UserService userService;
     @Operation(summary = "일반 사용자 회원가입", description = "일반 사용자 회원가입 API 입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일반 유저 회원가입 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
