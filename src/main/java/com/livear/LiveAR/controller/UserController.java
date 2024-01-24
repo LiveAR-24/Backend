@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-
     /**
      * NAME: 회원가입
      */
