@@ -22,7 +22,11 @@ public class User {
 
     String password; //기기 고유 번호
 
-    @Column(name = "user_role", nullable = false)
+    @Column(name = "user_role", nullable = false, length = 255)
     @Enumerated(EnumType.STRING)
     UserRole userRole;
+
+    public void changeRole(UserRole userRole){
+        this.userRole = userRole;
+    }
 }

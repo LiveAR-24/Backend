@@ -17,6 +17,7 @@ public class Drawing extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long drawingId;
+
     private String title;
     private String imageUrl;
 }
