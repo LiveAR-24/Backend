@@ -70,6 +70,7 @@ jobs:
     #4
     # AWS CodeDeploy에 배포
     - name: Deploy
+      if: github.event_name == 'push'
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.S3_IAM_ACCESSKEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_IAM_SECRETKEY }}
