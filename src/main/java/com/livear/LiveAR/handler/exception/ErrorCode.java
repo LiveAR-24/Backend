@@ -17,6 +17,7 @@ public enum ErrorCode {
     UNAUTHORIZED(401, "권한 인증에 실패했습니다."),
 
     // 403 FORBIDDEN 권한없음(인가 실패)
+    FORBIDDEN(403, "권한이 없습니다."),
     INVALID_TOKEN(4031, "유효하지 않은 토큰입니다."),
     EXPIRED_TOKEN(4032, "만료된 토큰입니다."),
     INVALID_PASSWORD(4033, "올바르지 않은 비밀번호 입니다."),

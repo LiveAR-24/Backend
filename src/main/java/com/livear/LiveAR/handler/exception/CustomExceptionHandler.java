@@ -1,20 +1,25 @@
 package com.livear.LiveAR.handler.exception;
 
+import com.livear.LiveAR.dto.common.CMRes;
 import com.livear.LiveAR.dto.common.ErrorRes;
-import com.livear.LiveAR.handler.exception.http.CustomBadRequestException;
-import com.livear.LiveAR.handler.exception.http.CustomConflictException;
-import com.livear.LiveAR.handler.exception.http.CustomForbiddenException;
-import com.livear.LiveAR.handler.exception.http.CustomNotFoundException;
+import com.livear.LiveAR.handler.exception.http.*;
+import com.livear.LiveAR.handler.exception.token.ExpiredJwtTokenException;
+import com.livear.LiveAR.handler.exception.token.ExpiredTokenException;
+import com.livear.LiveAR.handler.exception.token.InvalidTokenException;
 import com.livear.LiveAR.security.TokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.UnexpectedTypeException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import static com.livear.LiveAR.handler.exception.ErrorCode.*;
 
@@ -44,6 +49,51 @@ public class CustomExceptionHandler {
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<ErrorRes> handleRequiredRequest(MissingServletRequestPartException ex) {
         return new ResponseEntity<>(new ErrorRes(-1, 400, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 권한 없을 때
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorRes> accessDeniedException(HttpServletRequest httpServletRequest, AccessDeniedException e) {
+        try {
+            String jwtToken = tokenProvider.getJwtToken(httpServletRequest);
+            tokenProvider.isValidToken(jwtToken);
+        } catch (ExpiredJwtTokenException ex) {
+            return new ResponseEntity<>(new ErrorRes(-1, ErrorCode.EXPIRED_TOKEN.getStatus(), ErrorCode.EXPIRED_TOKEN.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (ExpiredTokenException | InvalidTokenException ex) {
+            return new ResponseEntity<>(new ErrorRes(-1, ErrorCode.INVALID_TOKEN.getStatus(), ErrorCode.INVALID_TOKEN.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception ignored) {
+        }
+        return new ResponseEntity<>(new ErrorRes(-1, ErrorCode.UNAUTHORIZED.getStatus(), ErrorCode.UNAUTHORIZED.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * 만료된 토큰
+     */
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<ErrorRes> expiredTokenExceptionHandler(ExpiredTokenException e) {
+        return new ResponseEntity<>(new ErrorRes(-1, e.getErrorCode().getStatus(), e.getErrorCode().getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * 유효하지 않은 토큰
+     */
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorRes> invalidTokenExceptionHandler(InvalidTokenException e) {
+        return new ResponseEntity<>(new ErrorRes(-1, e.getErrorCode().getStatus(), e.getErrorCode().getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    //유효성 검사
+    @ExceptionHandler(CustomValidationException.class)
+    public ResponseEntity<CMRes<?>> validationApiExceptionHandler(CustomValidationException e) {
+        return new ResponseEntity<>(new CMRes<>(-1, e.getMessage(), e.errorMap), HttpStatus.BAD_REQUEST);
+    }
+
+    //sql 에러
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<CMRes<?>> apiSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+        return new ResponseEntity<>(new CMRes<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -81,8 +131,8 @@ public class CustomExceptionHandler {
     /**
      * 서버 500 내부 에러
      */
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorRes> ServerExceptionHandler(Exception ex) {
-        return new ResponseEntity<>(new ErrorRes(-1, INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    protected ResponseEntity<ErrorRes> ServerExceptionHandler(Exception ex) {
+//        return new ResponseEntity<>(new ErrorRes(-1, INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

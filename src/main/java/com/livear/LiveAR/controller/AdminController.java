@@ -3,8 +3,8 @@ package com.livear.LiveAR.controller;
 import com.livear.LiveAR.common.response.BaseResponse;
 import com.livear.LiveAR.common.response.BaseResponseStatus;
 import com.livear.LiveAR.dto.admin.AdminReq;
+import com.livear.LiveAR.security.dto.TokenResponseDto;
 import com.livear.LiveAR.service.AdminService;
-import com.livear.LiveAR.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,8 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Tag(name = "admin", description = "관리자 관련 API")
 @Slf4j
@@ -38,7 +36,20 @@ public class AdminController {
     })
     @PostMapping(value ="/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminCreate(@RequestPart AdminReq.CreateDrawing createDrawing, @RequestPart MultipartFile image) {
+    public BaseResponse<String> adminCreate(@Valid @RequestPart AdminReq.CreateDrawing createDrawing, @RequestPart MultipartFile image) {
         return BaseResponse.success(BaseResponseStatus.CREATED, adminService.createDrawing(createDrawing, image));
+    }
+
+    /**
+     * 관리자로 역할 변경
+     */
+    @Operation(summary = "관리자로 권한 변경", description = "관리자로 권한 변경 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "관리자로 권한 변경 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @PostMapping(value ="")
+    @PreAuthorize("hasRole('USER')")
+    public BaseResponse<TokenResponseDto> adminCreate() {
+        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.getAdmin());
     }
 }
