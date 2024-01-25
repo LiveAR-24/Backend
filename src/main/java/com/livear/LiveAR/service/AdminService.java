@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 import static com.livear.LiveAR.domain.UserRole.ROLE_ADMIN;
 
 @Service
@@ -35,7 +37,17 @@ public class AdminService {
         String uploadFileUrl = s3Uploader.uploadFile(image);
         Drawing drawing = createDrawing.toEntity(uploadFileUrl);
         drawingRepository.save(drawing);
-        return "도면 생성 성공";
+        return "도안 생성 성공";
+    }
+
+    /**
+     * 도안 삭제
+     */
+    public String deleteDrawing(Long drawingId) {
+        Drawing drawing = drawingRepository.findById(drawingId)
+                .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
+        drawingRepository.delete(drawing);
+        return "도안 삭제 성공";
     }
 
     /**
