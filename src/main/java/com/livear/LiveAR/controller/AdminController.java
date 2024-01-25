@@ -3,6 +3,7 @@ package com.livear.LiveAR.controller;
 import com.livear.LiveAR.common.response.BaseResponse;
 import com.livear.LiveAR.common.response.BaseResponseStatus;
 import com.livear.LiveAR.dto.admin.AdminReq;
+import com.livear.LiveAR.dto.common.ErrorRes;
 import com.livear.LiveAR.security.dto.TokenResponseDto;
 import com.livear.LiveAR.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +42,20 @@ public class AdminController {
     }
 
     /**
+     * 관리자 도안 삭제
+     */
+    @Operation(summary = "도안 삭제", description = "관리자 도안 삭제 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도안 삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 도안에 접근", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
+    })
+    @DeleteMapping(value ="/{drwaingId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<String> adminDelete(@PathVariable Long drwaingId) {
+        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.deleteDrawing(drwaingId));
+    }
+
+    /**
      * 관리자로 역할 변경
      */
     @Operation(summary = "관리자로 권한 변경", description = "관리자로 권한 변경 API 입니다.")
@@ -49,7 +64,7 @@ public class AdminController {
     })
     @PostMapping(value ="")
     @PreAuthorize("hasRole('USER')")
-    public BaseResponse<TokenResponseDto> adminCreate() {
+    public BaseResponse<TokenResponseDto> getAdmin() {
         return BaseResponse.success(BaseResponseStatus.CREATED, adminService.getAdmin());
     }
 }

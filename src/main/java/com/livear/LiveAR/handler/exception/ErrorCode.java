@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     //404 NOT_FOUND 잘못된 리소스 접근
     NOT_FOUND_USER(40401, "존재하지 않는 회원입니다."),
+    NOT_FOUND_DRAWING(40402, "존재하지 않는 도안입니다."),
 
     //409 CONFLICT 중복된 리소스
     ALREADY_SAVED_NICKNAME(4091, "이미 저장된 닉네임 입니다."),
