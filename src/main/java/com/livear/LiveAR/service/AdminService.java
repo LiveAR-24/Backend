@@ -44,6 +44,7 @@ public class AdminService {
     public String deleteDrawing(Long drawingId) {
         Drawing drawing = drawingRepository.findById(drawingId)
                 .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
+        s3Uploader.deleteFile(drawing.getImageUrl());
         drawingRepository.delete(drawing);
         return "도안 삭제 성공";
     }
