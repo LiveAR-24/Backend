@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
@@ -38,14 +41,20 @@ public class S3Uploader {
         } catch (IOException e) {
             log.info(e.getMessage());
         }
+
         return amazonS3Client.getUrl(bucketName, fileName).toString();
     }
 
     /**
      * 파일 삭제
      */
-    public void deleteFile(String fileName) {
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+    public void deleteFile(String url) {
+        try{
+            String convertUrl = URLDecoder.decode(url.split("/")[3], StandardCharsets.UTF_8.name());
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, convertUrl));
+        }catch (UnsupportedEncodingException e){
+            log.info(e.getMessage());
+        }
     }
 
     /**
