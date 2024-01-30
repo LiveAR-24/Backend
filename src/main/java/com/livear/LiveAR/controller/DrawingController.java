@@ -78,4 +78,17 @@ public class DrawingController {
                                                              Pageable pageable) {
         return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.dateDrawingList(keyword, pageable));
     }
+
+    /**
+     * 도안 상세보기
+     */
+    @Operation(summary = "도안 상세보기", description = "도안 상세보기 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도안 상세보기 조회 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 도안에 접근", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
+    })
+    @GetMapping(value ="/detail/{drawingId}")
+    public BaseResponse<DrawingRes.Base> detailDrawing(@PathVariable Long drawingId) {
+        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.detailDrawing(drawingId));
+    }
 }

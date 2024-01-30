@@ -110,4 +110,21 @@ public class DrawingService {
         }
         return DrawingRes.Multiple.of(dateDrawingPage.getTotalElements(),dateDrawingPage.getTotalPages(), userDrawingList);
     }
+
+    /**
+     * 도안 상세보기
+     */
+    public DrawingRes.Base detailDrawing(Long drawingId) {
+        Long userId = loginService.getLoginUserId();
+        Drawing drawing = drawingRepository.findById(drawingId)
+                .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
+
+        if (userId.equals(0L)) {
+            return DrawingRes.Base.of(drawing, false);
+        } else {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_USER));
+            return DrawingRes.Base.of(drawing, drawingLikeRepository.existsByUserAndDrawing(user, drawing));
+        }
+    }
 }
