@@ -37,7 +37,7 @@ public class AdminController {
     })
     @PostMapping(value ="/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminCreate(@Valid @RequestPart AdminReq.CreateDrawing createDrawingDto, @RequestPart MultipartFile drawingImage) {
+    public BaseResponse<Long> adminCreate(@Valid @RequestPart AdminReq.CreateDrawing createDrawingDto, @RequestPart MultipartFile drawingImage) {
         return BaseResponse.success(BaseResponseStatus.CREATED, adminService.createDrawing(createDrawingDto, drawingImage));
     }
 

@@ -31,11 +31,11 @@ public class AdminService {
     /**
      * 도안 등록
      */
-    public String createDrawing(AdminReq.CreateDrawing createDrawing, MultipartFile image) {
+    public Long createDrawing(AdminReq.CreateDrawing createDrawing, MultipartFile image) {
         String uploadFileUrl = s3Uploader.uploadFile(image);
         Drawing drawing = createDrawing.toEntity(uploadFileUrl);
         drawingRepository.save(drawing);
-        return "도안 생성 성공";
+        return drawing.getDrawingId();
     }
 
     /**
@@ -44,6 +44,7 @@ public class AdminService {
     public String deleteDrawing(Long drawingId) {
         Drawing drawing = drawingRepository.findById(drawingId)
                 .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
+        s3Uploader.deleteFile(drawing.getImageUrl());
         drawingRepository.delete(drawing);
         return "도안 삭제 성공";
     }
