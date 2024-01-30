@@ -37,7 +37,7 @@ public class DrawingController {
     @PostMapping(value ="/like/{drawingId}")
     @PreAuthorize("hasRole('USER')")
     public BaseResponse<Boolean> likeDrawing(@PathVariable Long drawingId) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.likeDrawing(drawingId));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.likeDrawing(drawingId));
     }
 
     /**
@@ -50,7 +50,7 @@ public class DrawingController {
     @GetMapping(value ="/user/like")
     @PreAuthorize("hasRole('USER')")
     public BaseResponse<DrawingRes.Multiple> userLikeDrawingList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.userLikeDrawingList(pageable));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.userLikeDrawingList(pageable));
     }
 
     /**
@@ -62,6 +62,33 @@ public class DrawingController {
     })
     @GetMapping(value ="/like")
     public BaseResponse<DrawingRes.Multiple> likeDrawingList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.likeDrawingList(pageable));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.likeDrawingList(pageable));
+    }
+
+    /**
+     * 도안 최신순 목록 + 검색
+     */
+    @Operation(summary = "도안 최신순 목록", description = "도안 최신순 목록 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도안 최신순 목록 조회 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @GetMapping(value ="/date")
+    public BaseResponse<DrawingRes.Multiple> dateDrawingList(@RequestParam(required = false) String keyword,
+                                                             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
+                                                             Pageable pageable) {
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.dateDrawingList(keyword, pageable));
+    }
+
+    /**
+     * 도안 상세보기
+     */
+    @Operation(summary = "도안 상세보기", description = "도안 상세보기 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도안 상세보기 조회 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 도안에 접근", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
+    })
+    @GetMapping(value ="/detail/{drawingId}")
+    public BaseResponse<DrawingRes.Base> detailDrawing(@PathVariable Long drawingId) {
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.detailDrawing(drawingId));
     }
 }

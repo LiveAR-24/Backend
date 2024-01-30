@@ -51,8 +51,9 @@ public class AdminController {
     })
     @DeleteMapping(value ="/{drawingId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminDelete(@PathVariable Long drawingId) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.deleteDrawing(drawingId));
+    public BaseResponse<String> adminDelete(@PathVariable Long drwaingId) {
+        return BaseResponse.success(BaseResponseStatus.OK, adminService.deleteDrawing(drwaingId));
+
     }
 
     /**
@@ -65,6 +66,6 @@ public class AdminController {
     @PostMapping(value ="")
     @PreAuthorize("hasRole('USER')")
     public BaseResponse<TokenResponseDto> getAdmin() {
-        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.getAdmin());
+        return BaseResponse.success(BaseResponseStatus.OK, adminService.getAdmin());
     }
 }
