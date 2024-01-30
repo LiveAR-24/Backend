@@ -18,6 +18,9 @@ public class DrawingRes {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class Base {
 
+        @Schema(description = "도안 아이디")
+        Long drawingId;
+
         @Schema(description = "도안명")
         String title;
 
@@ -29,6 +32,7 @@ public class DrawingRes {
 
         public static Base of(Drawing drawing, Boolean existLike) {
             return Base.builder()
+                    .drawingId(drawing.getDrawingId())
                     .title(drawing.getTitle())
                     .imageUrl(drawing.getImageUrl())
                     .existLike(existLike)
