@@ -61,6 +61,6 @@ public class UserController {
     @Operation(summary = "소셜로그인", description = "카카오 로그인/회원가입 API 입니다.")
     @GetMapping(value = "/login/oauth2/code/kakao", produces = "application/json")
     public BaseResponse<TokenResponseDto> kakaoCallback(@RequestParam String code) throws JsonProcessingException {
-        return BaseResponse.success(BaseResponseStatus.CREATED, userService.socialLogin(code));
+        return BaseResponse.success(BaseResponseStatus.OK, userService.socialLogin(code));
     }
 }
