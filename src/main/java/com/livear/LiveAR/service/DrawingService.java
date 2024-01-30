@@ -88,4 +88,26 @@ public class DrawingService {
         }
         return DrawingRes.Multiple.of(likeDrawingPage.getTotalElements(),likeDrawingPage.getTotalPages(), userDrawingList);
     }
+
+    /**
+     * 도안 최신순 목록
+     */
+    public DrawingRes.Multiple dateDrawingList(String keyword, Pageable pageable) {
+        Long userId = loginService.getLoginUserId();
+        Page<Drawing> dateDrawingPage = drawingRepository.findByKeyword(keyword, pageable);
+        List<DrawingRes.Base> userDrawingList;
+
+        if (userId.equals(0L)) {
+            userDrawingList = dateDrawingPage.getContent().stream()
+                    .map(drawing -> DrawingRes.Base.of(drawing, false))
+                    .collect(Collectors.toList());
+        } else {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_USER));
+            userDrawingList = dateDrawingPage.getContent().stream()
+                    .map(drawing -> DrawingRes.Base.of(drawing, drawingLikeRepository.existsByUserAndDrawing(user, drawing)))
+                    .collect(Collectors.toList());
+        }
+        return DrawingRes.Multiple.of(dateDrawingPage.getTotalElements(),dateDrawingPage.getTotalPages(), userDrawingList);
+    }
 }

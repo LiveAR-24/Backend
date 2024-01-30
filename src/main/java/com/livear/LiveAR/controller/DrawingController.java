@@ -64,4 +64,18 @@ public class DrawingController {
     public BaseResponse<DrawingRes.Multiple> likeDrawingList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.likeDrawingList(pageable));
     }
+
+    /**
+     * 도안 최신순 목록 + 검색
+     */
+    @Operation(summary = "도안 최신순 목록", description = "도안 최신순 목록 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도안 최신순 목록 조회 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @GetMapping(value ="/date")
+    public BaseResponse<DrawingRes.Multiple> dateDrawingList(@RequestParam(required = false) String keyword,
+                                                             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
+                                                             Pageable pageable) {
+        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.dateDrawingList(keyword, pageable));
+    }
 }
