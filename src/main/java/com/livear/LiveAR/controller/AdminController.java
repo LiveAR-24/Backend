@@ -37,8 +37,8 @@ public class AdminController {
     })
     @PostMapping(value ="/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminCreate(@Valid @RequestPart AdminReq.CreateDrawing createDrawing, @RequestPart MultipartFile image) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.createDrawing(createDrawing, image));
+    public BaseResponse<Long> adminCreate(@Valid @RequestPart AdminReq.CreateDrawing createDrawingDto, @RequestPart MultipartFile drawingImage) {
+        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.createDrawing(createDrawingDto, drawingImage));
     }
 
     /**
@@ -49,10 +49,10 @@ public class AdminController {
             @ApiResponse(responseCode = "200", description = "도안 삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 도안에 접근", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
     })
-    @DeleteMapping(value ="/{drwaingId}")
+    @DeleteMapping(value ="/{drawingId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminDelete(@PathVariable Long drwaingId) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.deleteDrawing(drwaingId));
+    public BaseResponse<String> adminDelete(@PathVariable Long drawingId) {
+        return BaseResponse.success(BaseResponseStatus.CREATED, adminService.deleteDrawing(drawingId));
     }
 
     /**
