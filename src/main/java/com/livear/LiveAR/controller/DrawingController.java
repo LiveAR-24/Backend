@@ -37,7 +37,7 @@ public class DrawingController {
     @PostMapping(value ="/like/{drawingId}")
     @PreAuthorize("hasRole('USER')")
     public BaseResponse<Boolean> likeDrawing(@PathVariable Long drawingId) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.likeDrawing(drawingId));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.likeDrawing(drawingId));
     }
 
     /**
@@ -50,7 +50,7 @@ public class DrawingController {
     @GetMapping(value ="/user/like")
     @PreAuthorize("hasRole('USER')")
     public BaseResponse<DrawingRes.Multiple> userLikeDrawingList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.userLikeDrawingList(pageable));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.userLikeDrawingList(pageable));
     }
 
     /**
@@ -62,7 +62,7 @@ public class DrawingController {
     })
     @GetMapping(value ="/like")
     public BaseResponse<DrawingRes.Multiple> likeDrawingList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.likeDrawingList(pageable));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.likeDrawingList(pageable));
     }
 
     /**
@@ -76,7 +76,7 @@ public class DrawingController {
     public BaseResponse<DrawingRes.Multiple> dateDrawingList(@RequestParam(required = false) String keyword,
                                                              @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
                                                              Pageable pageable) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.dateDrawingList(keyword, pageable));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.dateDrawingList(keyword, pageable));
     }
 
     /**
@@ -89,6 +89,6 @@ public class DrawingController {
     })
     @GetMapping(value ="/detail/{drawingId}")
     public BaseResponse<DrawingRes.Base> detailDrawing(@PathVariable Long drawingId) {
-        return BaseResponse.success(BaseResponseStatus.CREATED, drawingLikeService.detailDrawing(drawingId));
+        return BaseResponse.success(BaseResponseStatus.OK, drawingLikeService.detailDrawing(drawingId));
     }
 }
