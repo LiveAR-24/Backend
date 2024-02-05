@@ -15,7 +15,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userId;
 
-    @Column(nullable = false)
     String nickname;
 
     String email;
