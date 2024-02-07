@@ -37,9 +37,9 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이미 저장된 닉네임", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
     })
     @PostMapping(value = "/signup")
-    public BaseResponse<Long> signup (@Parameter(description = "일반 회원가입 요청 객체") @Valid @RequestBody UserReq.Signup userSignup) {
-
-        return BaseResponse.success(BaseResponseStatus.CREATED, userService.signup(userSignup));
+    public BaseResponse signup (@Parameter(description = "일반 회원가입 요청 객체") @Valid @RequestBody UserReq.Signup userSignup) {
+        userService.signup(userSignup);
+        return BaseResponse.success(BaseResponseStatus.CREATED);
     }
 
     /**

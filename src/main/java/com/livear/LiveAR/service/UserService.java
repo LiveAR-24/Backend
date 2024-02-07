@@ -50,13 +50,12 @@ public class UserService {
      * 회원가입
      */
     @Transactional
-    public Long signup(UserReq.Signup userSignup) {
+    public void signup(UserReq.Signup userSignup) {
         if(!isDuplicateNickname(userSignup.getNickname())) {
             String rawPassword = userSignup.getPassword();
             String encPassword = passwordEncoder.encode(rawPassword);
             User user = userSignup.toEntity(encPassword);
             userRepository.save(user);
-            return user.getUserId();
         }
         throw new CustomConflictException(ErrorCode.ALREADY_SAVED_NICKNAME);
     }
