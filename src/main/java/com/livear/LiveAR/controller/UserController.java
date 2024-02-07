@@ -79,4 +79,18 @@ public class UserController {
         userService.changeNickname(changeNickname);
         return BaseResponse.success(BaseResponseStatus.OK);
     }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @DeleteMapping(value ="/user")
+    @PreAuthorize("hasRole('USER')")
+    public BaseResponse deleteUser() {
+        userService.deleteUser();
+        return BaseResponse.success(BaseResponseStatus.OK);
+    }
 }
