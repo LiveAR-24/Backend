@@ -52,8 +52,9 @@ public class AdminController {
     })
     @DeleteMapping(value ="/{drawingId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminDelete(@PathVariable Long drawingId) {
-        return BaseResponse.success(BaseResponseStatus.OK, adminService.deleteDrawing(drawingId));
+    public BaseResponse adminDelete(@PathVariable Long drawingId) {
+        adminService.deleteDrawing(drawingId);
+        return BaseResponse.success(BaseResponseStatus.OK);
 
     }
 
