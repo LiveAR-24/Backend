@@ -16,8 +16,8 @@ public class UserReq {
     @Getter
     @Setter
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Schema(title = "일반 사용자 회원가입 요청 객체")
-    public static class Signup {
+    @Schema(title = "일반 사용자 로그인&회원가입 요청 객체")
+    public static class SignupAndLogin {
 
         @NotNull
         @Schema(required = true,description = "유저 닉네임")
@@ -34,21 +34,6 @@ public class UserReq {
                     .password(encPassword)
                     .build();
         }
-    }
-
-    @Getter
-    @Setter
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Schema(title = "로그인 요청 객체")
-    public static class Login {
-
-        @NotNull
-        @Schema(required = true, description = "유저 닉네임")
-        String nickname;
-
-        @NotNull
-        @Schema(required = true, description = "기기 번호)")
-        String password;
     }
 
     @Getter

@@ -49,36 +49,26 @@ public class UserService {
     }
 
     /**
-     * 회원가입
+     * 회원가입 & 로그인
      */
-    public void signup(UserReq.Signup userSignup) {
-        if(!isDuplicateNickname(userSignup.getNickname())) {
-            String rawPassword = userSignup.getPassword();
+    public TokenResponseDto SignupAndLogin(UserReq.SignupAndLogin userSignupAndLogin) {
+        User user = null;
+        if (isDuplicateNickname(userSignupAndLogin.getNickname())) {
+            user = userRepository.findByNickname(userSignupAndLogin.getNickname());
+            if (!passwordEncoder.matches(userSignupAndLogin.getPassword(), user.getPassword())) {
+                throw new CustomBadRequestException(ErrorCode.ALREADY_SAVED_NICKNAME);
+            }
+        }
+
+        else{
+            String rawPassword = userSignupAndLogin.getPassword();
             String encPassword = passwordEncoder.encode(rawPassword);
-            User user = userSignup.toEntity(encPassword);
+            user = userSignupAndLogin.toEntity(encPassword);
             userRepository.save(user);
         }
-        else {
-            throw new CustomConflictException(ErrorCode.ALREADY_SAVED_NICKNAME);
-        }
-    }
 
-    /**
-     * 로그인
-     */
-    public TokenResponseDto login(UserReq.Login userLogin) {
-        if (isDuplicateNickname(userLogin.getNickname())) {
-            User user = userRepository.findByNickname(userLogin.getNickname());
-
-            if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
-                throw new CustomBadRequestException(ErrorCode.INVALID_PASSWORD);
-            }
-
-            TokenResponseDto tokenResponseDto = tokenProvider.generateTokenResponse(user);
-            return tokenResponseDto;
-        }
-
-        throw new CustomNotFoundException(ErrorCode.NOT_FOUND_USER);
+        TokenResponseDto tokenResponseDto = tokenProvider.generateTokenResponse(user);
+        return tokenResponseDto;
     }
 
     /**
