@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.livear.LiveAR.domain.User;
 import com.livear.LiveAR.dto.user.UserReq;
+import com.livear.LiveAR.dto.userDrawing.UserDrawingReq;
 import com.livear.LiveAR.handler.exception.ErrorCode;
 import com.livear.LiveAR.handler.exception.http.CustomBadRequestException;
 import com.livear.LiveAR.handler.exception.http.CustomConflictException;
+import com.livear.LiveAR.handler.exception.http.CustomForbiddenException;
 import com.livear.LiveAR.handler.exception.http.CustomNotFoundException;
 import com.livear.LiveAR.repository.UserRepository;
 import com.livear.LiveAR.security.TokenProvider;
@@ -47,36 +49,26 @@ public class UserService {
     }
 
     /**
-     * 회원가입
+     * 회원가입 & 로그인
      */
-    @Transactional
-    public Long signup(UserReq.Signup userSignup) {
-        if(!isDuplicateNickname(userSignup.getNickname())) {
-            String rawPassword = userSignup.getPassword();
-            String encPassword = passwordEncoder.encode(rawPassword);
-            User user = userSignup.toEntity(encPassword);
-            userRepository.save(user);
-            return user.getUserId();
-        }
-        throw new CustomConflictException(ErrorCode.ALREADY_SAVED_NICKNAME);
-    }
-
-    /**
-     * 로그인
-     */
-    public TokenResponseDto login(UserReq.Login userLogin) {
-        if (isDuplicateNickname(userLogin.getNickname())) {
-            User user = userRepository.findByNickname(userLogin.getNickname());
-
-            if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
-                throw new CustomBadRequestException(ErrorCode.INVALID_PASSWORD);
+    public TokenResponseDto SignupAndLogin(UserReq.SignupAndLogin userSignupAndLogin) {
+        User user = null;
+        if (isDuplicateNickname(userSignupAndLogin.getNickname())) {
+            user = userRepository.findByNickname(userSignupAndLogin.getNickname());
+            if (!passwordEncoder.matches(userSignupAndLogin.getPassword(), user.getPassword())) {
+                throw new CustomBadRequestException(ErrorCode.ALREADY_SAVED_NICKNAME);
             }
-
-            TokenResponseDto tokenResponseDto = tokenProvider.generateTokenResponse(user);
-            return tokenResponseDto;
         }
 
-        throw new CustomNotFoundException(ErrorCode.NOT_FOUND_USER);
+        else{
+            String rawPassword = userSignupAndLogin.getPassword();
+            String encPassword = passwordEncoder.encode(rawPassword);
+            user = userSignupAndLogin.toEntity(encPassword);
+            userRepository.save(user);
+        }
+
+        TokenResponseDto tokenResponseDto = tokenProvider.generateTokenResponse(user);
+        return tokenResponseDto;
     }
 
     /**
@@ -89,6 +81,15 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_USER));
         user.changeNickname(changeNickname.getNickname());
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Transactional
+    public void deleteUser() {
+        Long userId = loginService.getLoginUserId();
+        userRepository.deleteById(userId);
     }
 
     /**

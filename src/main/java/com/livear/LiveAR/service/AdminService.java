@@ -41,12 +41,11 @@ public class AdminService {
     /**
      * 도안 삭제
      */
-    public String deleteDrawing(Long drawingId) {
+    public void deleteDrawing(Long drawingId) {
         Drawing drawing = drawingRepository.findById(drawingId)
                 .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
         s3Uploader.deleteFile(drawing.getImageUrl());
         drawingRepository.delete(drawing);
-        return "도안 삭제 성공";
     }
 
     /**
@@ -60,6 +59,15 @@ public class AdminService {
         user.changeRole(ROLE_ADMIN);
         TokenResponseDto tokenResponseDto = tokenProvider.generateTokenResponse(user);
         return tokenResponseDto;
+    }
 
+    /**
+     * 도안 제목 변경
+     */
+    @Transactional
+    public void changeTitle(Long drawingId, AdminReq.CreateDrawing changeTitle) {
+        Drawing drawing = drawingRepository.findById(drawingId)
+                .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
+        drawing.changeTitle(changeTitle.getTitle());
     }
 }

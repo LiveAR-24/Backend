@@ -7,6 +7,7 @@ import com.livear.LiveAR.dto.common.ErrorRes;
 import com.livear.LiveAR.security.dto.TokenResponseDto;
 import com.livear.LiveAR.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,8 +52,9 @@ public class AdminController {
     })
     @DeleteMapping(value ="/{drawingId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public BaseResponse<String> adminDelete(@PathVariable Long drwaingId) {
-        return BaseResponse.success(BaseResponseStatus.OK, adminService.deleteDrawing(drwaingId));
+    public BaseResponse adminDelete(@PathVariable Long drawingId) {
+        adminService.deleteDrawing(drawingId);
+        return BaseResponse.success(BaseResponseStatus.OK);
 
     }
 
@@ -67,5 +69,19 @@ public class AdminController {
     @PreAuthorize("hasRole('USER')")
     public BaseResponse<TokenResponseDto> getAdmin() {
         return BaseResponse.success(BaseResponseStatus.OK, adminService.getAdmin());
+    }
+
+    /**
+     * 관리자 도안 제목 변경
+     */
+    @Operation(summary = "도안 제목 변경", description = "도안 제목 변경 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도안 제목 변경 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @PostMapping(value = "/{drawingId}", produces = "application/json")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse changeTitle(@PathVariable Long drawingId, @Valid @RequestBody AdminReq.CreateDrawing changeTitle ) {
+        adminService.changeTitle(drawingId, changeTitle);
+        return BaseResponse.success(BaseResponseStatus.OK);
     }
 }
