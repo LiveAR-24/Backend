@@ -37,6 +37,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final LoginService loginService;
 
     /**
      * 사용자 닉네임 중복 검사
@@ -76,6 +77,18 @@ public class UserService {
         }
 
         throw new CustomNotFoundException(ErrorCode.NOT_FOUND_USER);
+    }
+
+    /**
+     * 닉네임 변경
+     */
+    @Transactional
+    public void changeNickname(UserReq.ChangeNickname changeNickname) {
+        if (isDuplicateNickname(changeNickname.getNickname())) throw new CustomConflictException(ErrorCode.ALREADY_SAVED_NICKNAME);
+        Long userId = loginService.getLoginUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_USER));
+        user.changeNickname(changeNickname.getNickname());
     }
 
     /**

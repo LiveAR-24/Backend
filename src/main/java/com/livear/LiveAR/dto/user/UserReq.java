@@ -73,4 +73,15 @@ public class UserReq {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    @Schema(title = "닉네임 수정 요청 객체")
+    public static class ChangeNickname {
+
+        @NotNull
+        @Schema(required = true, description = "유저 닉네임")
+        String nickname;
+    }
 }

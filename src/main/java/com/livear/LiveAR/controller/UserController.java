@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,7 +29,7 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * NAME: 회원가입
+     * 회원가입
      */
     @Operation(summary = "일반 사용자 회원가입", description = "일반 사용자 회원가입 API 입니다.")
     @ApiResponses(value = {
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     /**
-     * NAME: 로그인
+     * 로그인
      */
     @Operation(summary = "로그인", description = "사용자 로그인 API 입니다.")
     @ApiResponses(value = {
@@ -56,11 +57,26 @@ public class UserController {
     }
 
     /**
-     * NAME: 카카오로그인
+     * 카카오로그인
      */
     @Operation(summary = "소셜로그인", description = "카카오 로그인/회원가입 API 입니다.")
     @GetMapping(value = "/login/oauth2/code/kakao", produces = "application/json")
     public BaseResponse<TokenResponseDto> kakaoCallback(@RequestParam String code) throws JsonProcessingException {
         return BaseResponse.success(BaseResponseStatus.OK, userService.socialLogin(code));
+    }
+
+    /**
+     * 닉네임 변경
+     */
+    @Operation(summary = "닉네임 변경", description = "닉네임 변경 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "닉네임 변경 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 저장된 닉네임", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
+    })
+    @PostMapping(value = "/nickname", produces = "application/json")
+    @PreAuthorize("hasRole('USER')")
+    public BaseResponse changeNickname(@Parameter(description = "닉네임 변경 요청 객체") @Valid @RequestBody UserReq.ChangeNickname changeNickname ) {
+        userService.changeNickname(changeNickname);
+        return BaseResponse.success(BaseResponseStatus.OK);
     }
 }
