@@ -20,4 +20,8 @@ public class Drawing extends BaseTimeEntity{
 
     private String title;
     private String imageUrl;
+
+    public void changeTitle(String title){
+        this.title = title;
+    }
 }
