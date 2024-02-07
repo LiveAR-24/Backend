@@ -41,12 +41,11 @@ public class AdminService {
     /**
      * 도안 삭제
      */
-    public String deleteDrawing(Long drawingId) {
+    public void deleteDrawing(Long drawingId) {
         Drawing drawing = drawingRepository.findById(drawingId)
                 .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_DRAWING));
         s3Uploader.deleteFile(drawing.getImageUrl());
         drawingRepository.delete(drawing);
-        return "도안 삭제 성공";
     }
 
     /**
