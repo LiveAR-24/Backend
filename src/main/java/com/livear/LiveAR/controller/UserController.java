@@ -78,4 +78,17 @@ public class UserController {
         userService.deleteUser();
         return BaseResponse.success(BaseResponseStatus.OK);
     }
+
+    /**
+     * AccessToken 재발급
+     */
+    @Operation(summary = "AccessToken 재발급", description = "만료 또는 새로고침으로 인한 AccessToken 재발급 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "AccessToken 재발급 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 RefreshToken", content = @Content(schema = @Schema(implementation = ErrorRes.class)))
+    })
+    @PostMapping("/token")
+    public BaseResponse<String> accessTokenRefresh(@Valid @RequestBody UserReq.Token request) {
+        return BaseResponse.success(BaseResponseStatus.OK, userService.getAccessToken(request.getRefreshToken()));
+    }
 }

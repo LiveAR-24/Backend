@@ -69,4 +69,14 @@ public class UserReq {
         @Schema(required = true, description = "유저 닉네임")
         String nickname;
     }
+
+    @Getter
+    @Setter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    @Schema(title = "AccessToken 재발급 요청 객체")
+    public static class Token {
+
+        @NotNull
+        String refreshToken;
+    }
 }
