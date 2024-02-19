@@ -131,8 +131,8 @@ public class CustomExceptionHandler {
     /**
      * 서버 500 내부 에러
      */
-//    @ExceptionHandler(Exception.class)
-//    protected ResponseEntity<ErrorRes> ServerExceptionHandler(Exception ex) {
-//        return new ResponseEntity<>(new ErrorRes(-1, INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorRes> ServerExceptionHandler(Exception ex) {
+        return new ResponseEntity<>(new ErrorRes(-1, INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

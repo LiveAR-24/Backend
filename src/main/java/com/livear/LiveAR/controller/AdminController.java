@@ -7,7 +7,6 @@ import com.livear.LiveAR.dto.common.ErrorRes;
 import com.livear.LiveAR.security.dto.TokenResponseDto;
 import com.livear.LiveAR.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

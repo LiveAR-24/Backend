@@ -28,13 +28,4 @@ public class AdminReq {
                     .build();
         }
     }
-
-    @Getter
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Schema(title = "도안 삭제 객체")
-    public static class DeleteDrawing {
-        @NotNull
-        @Schema(description = "삭제할 도안 ID 리스트")
-        List<Long> drawingIdList;
-    }
 }
