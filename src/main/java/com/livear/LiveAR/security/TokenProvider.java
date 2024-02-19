@@ -38,7 +38,7 @@ public class TokenProvider {
 
     private static final String AUTHORITY_KEY = "auth";
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME_MILLIS = 24L * 60L * 60L * 1000L; //todo: 실제 배포시 2시간으로 변경
+    private static final long ACCESS_TOKEN_EXPIRE_TIME_MILLIS = 24L * 60L * 60L * 1000L;
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME_MILLIS = 30L * 24L * 60L * 60L * 1000L;
 

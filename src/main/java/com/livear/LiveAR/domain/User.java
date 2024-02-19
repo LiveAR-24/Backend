@@ -21,6 +21,8 @@ public class User {
 
     String password; //기기 고유 번호
 
+    String jwt;
+
     @Column(name = "user_role", nullable = false, length = 255)
     @Enumerated(EnumType.STRING)
     UserRole userRole;
@@ -31,4 +33,9 @@ public class User {
     public void changeNickname(String nickname){
         this.nickname = nickname;
     }
+
+    public void changeJwtToken(String refreshToken) {
+        this.jwt = refreshToken;
+    }
+
 }

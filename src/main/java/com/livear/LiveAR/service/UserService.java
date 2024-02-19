@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.livear.LiveAR.domain.User;
 import com.livear.LiveAR.dto.user.UserReq;
-import com.livear.LiveAR.dto.userDrawing.UserDrawingReq;
 import com.livear.LiveAR.handler.exception.ErrorCode;
 import com.livear.LiveAR.handler.exception.http.CustomBadRequestException;
 import com.livear.LiveAR.handler.exception.http.CustomConflictException;
-import com.livear.LiveAR.handler.exception.http.CustomForbiddenException;
 import com.livear.LiveAR.handler.exception.http.CustomNotFoundException;
 import com.livear.LiveAR.repository.UserRepository;
 import com.livear.LiveAR.security.TokenProvider;
@@ -51,6 +49,7 @@ public class UserService {
     /**
      * 회원가입 & 로그인
      */
+    @Transactional
     public TokenResponseDto SignupAndLogin(UserReq.SignupAndLogin userSignupAndLogin) {
         User user = null;
         if (isDuplicateNickname(userSignupAndLogin.getNickname())) {
@@ -68,6 +67,7 @@ public class UserService {
         }
 
         TokenResponseDto tokenResponseDto = tokenProvider.generateTokenResponse(user);
+        user.changeJwtToken(tokenResponseDto.getRefreshToken());
         return tokenResponseDto;
     }
 
@@ -90,6 +90,16 @@ public class UserService {
     public void deleteUser() {
         Long userId = loginService.getLoginUserId();
         userRepository.deleteById(userId);
+    }
+
+    /**
+     * 토큰 재발급
+     */
+    @Transactional
+    public String getAccessToken(String refreshToken) {
+        User user = userRepository.findByJwt(refreshToken)
+                .orElseThrow(() -> new CustomNotFoundException(ErrorCode.NOT_FOUND_JWT));
+        return tokenProvider.generateToken(user);
     }
 
     /**
